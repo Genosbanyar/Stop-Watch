@@ -1,14 +1,21 @@
+const stopWatch = document.getElementsByClassName("stop-watch")[0];
 const startButton = document.getElementsByClassName("start")[0];
-const stopButton = document.getElementsByClassName("stop")[0];
-const continueBtn = document.getElementsByClassName("continue")[0];
-const restartBtn = document.getElementsByClassName("restart")[0];
-const stopWatch = document.getElementsByClassName("clock")[0];
+const pauseButton = document.getElementsByClassName("pause")[0];
+const continueButton = document.getElementsByClassName("continue")[0];
+const restartButton = document.getElementsByClassName("restart")[0];
+const miliSec = document.getElementsByClassName("milisec")[0];
+const bodyTag = document.getElementsByTagName("body")[0];
 
-let minutes = 0,
+let miliSecond = 0,
   seconds = 0,
+  minutes = 0,
   hours = 0;
-let start = () => {
-  seconds += 1;
+const start = () => {
+  miliSecond += 1;
+  if (miliSecond === 60) {
+    seconds += 1;
+    miliSecond = 0;
+  }
   if (seconds === 60) {
     minutes += 1;
     seconds = 0;
@@ -17,29 +24,33 @@ let start = () => {
     hours += 1;
     minutes = 0;
   }
-  let secondText = seconds < 10 ? "0" + seconds.toString() : seconds;
-  let minutesText = minutes < 10 ? "0" + minutes.toString() : minutes;
-  let hoursText = hours < 10 ? "0" + hours.toString() : hours;
-  stopWatch.textContent = hoursText + " : " + minutesText + " : " + secondText;
+  let miliText = miliSecond < 10 ? "0" + miliSecond : miliSecond;
+  let secondText = seconds < 10 ? "0" + seconds : seconds;
+  let minuteText = minutes < 10 ? "0" + minutes : minutes;
+  let hourText = hours < 10 ? "0" + hours : hours;
+  miliSec.textContent = miliText;
+  stopWatch.textContent = hourText + " : " + minuteText + " : " + secondText;
 };
-let stopInterval;
+
+let intervalTime;
 startButton.addEventListener("click", () => {
-  stopInterval = setInterval(start, 1000);
+  intervalTime = setInterval(start, 10);
 });
 
-stopButton.addEventListener("click", () => {
-  clearInterval(stopInterval);
+pauseButton.addEventListener("click", () => {
+  clearInterval(intervalTime);
 });
 
-continueBtn.addEventListener("click", () => {
-  clearInterval(stopInterval);
-  stopInterval = setInterval(start, 1000);
+continueButton.addEventListener("click", () => {
+  clearInterval(intervalTime);
+  intervalTime = setInterval(start, 10);
 });
 
-restartBtn.addEventListener("click", () => {
-  clearInterval(stopInterval);
+restartButton.addEventListener("click", () => {
+  clearInterval(intervalTime);
+  miliSecond = 0;
   seconds = 0;
   minutes = 0;
   hours = 0;
-  stopInterval = setInterval(start, 1000);
+  intervalTime = setInterval(start, 10);
 });
